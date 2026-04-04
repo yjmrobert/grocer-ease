@@ -21,7 +21,9 @@ templ ListDetail(list *model.GroceryList, items []model.GroceryItem) {
 				class="flex flex-wrap gap-2"
 			>
 				<div class="flex-1 min-w-[200px]">
+					<label for="item-name" class="sr-only">Item name</label>
 					<input
+						id="item-name"
 						type="text"
 						name="name"
 						list="item-suggestions"
@@ -35,16 +37,23 @@ templ ListDetail(list *model.GroceryList, items []model.GroceryItem) {
 					/>
 					<datalist id="item-suggestions"></datalist>
 				</div>
+				<label for="item-qty" class="sr-only">Quantity</label>
 				<input
+					id="item-qty"
 					type="number"
 					name="quantity"
 					value="1"
 					min="0.1"
+					max="10000"
 					step="0.1"
+					aria-label="Quantity"
 					class="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
 				/>
+				<label for="item-unit" class="sr-only">Unit</label>
 				<select
+					id="item-unit"
 					name="unit"
+					aria-label="Unit"
 					class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
 				>
 					<option value="each">each</option>

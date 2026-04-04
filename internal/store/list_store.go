@@ -87,7 +87,9 @@ func (s *ListStore) AddItem(listID, name string, quantity float64, unit string) 
 		return nil, fmt.Errorf("add item: %w", err)
 	}
 	// Update list timestamp
-	s.db.Exec("UPDATE grocery_lists SET updated_at = ? WHERE id = ?", time.Now(), listID)
+	if _, err := s.db.Exec("UPDATE grocery_lists SET updated_at = ? WHERE id = ?", time.Now(), listID); err != nil {
+		return item, fmt.Errorf("update list timestamp: %w", err)
+	}
 	return item, nil
 }
 

@@ -48,6 +48,10 @@ func migrate(db *sql.DB) error {
 		)`,
 		`CREATE INDEX IF NOT EXISTS idx_price_cache_query_store ON price_cache(item_query, store)`,
 		`CREATE INDEX IF NOT EXISTS idx_grocery_items_list_id ON grocery_items(list_id)`,
+		`CREATE TABLE IF NOT EXISTS app_settings (
+			key TEXT PRIMARY KEY,
+			value TEXT NOT NULL
+		)`,
 	}
 	for _, m := range migrations {
 		if _, err := db.Exec(m); err != nil {

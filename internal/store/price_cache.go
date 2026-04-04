@@ -15,7 +15,14 @@ type PriceCacheStore struct {
 }
 
 func NewPriceCacheStore(db *sql.DB, ttl time.Duration) *PriceCacheStore {
-	return &PriceCacheStore{db: db, ttl: ttl}
+	s := &PriceCacheStore{db: db, ttl: ttl}
+	s.CleanExpired()
+	return s
+}
+
+// CleanExpired removes all cache entries older than TTL.
+func (s *PriceCacheStore) CleanExpired() {
+	s.db.Exec("DELETE FROM price_cache WHERE fetched_at < ?", time.Now().Add(-s.ttl))
 }
 
 func (s *PriceCacheStore) Get(query, store string) (*model.PriceCache, error) {
@@ -65,7 +72,9 @@ func (s *PriceCacheStore) GetProductNames(prefix string, limit int) ([]string, e
 
 func (s *PriceCacheStore) Set(query, storeName, productName string, price float64, unit string) error {
 	// Delete any existing entry for this query+store
-	s.db.Exec("DELETE FROM price_cache WHERE item_query = ? AND store = ?", query, storeName)
+	if _, err := s.db.Exec("DELETE FROM price_cache WHERE item_query = ? AND store = ?", query, storeName); err != nil {
+		return fmt.Errorf("delete old cache entry: %w", err)
+	}
 
 	_, err := s.db.Exec(
 		`INSERT INTO price_cache (id, item_query, store, product_name, price, unit, fetched_at)

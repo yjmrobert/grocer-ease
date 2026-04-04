@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"html"
 	"net/http"
 
 	"github.com/yjmrobert/grocer-ease/internal/store"
@@ -31,6 +32,6 @@ func (h *AutocompleteHandler) HandleSuggest(w http.ResponseWriter, r *http.Reque
 
 	w.Header().Set("Content-Type", "text/html")
 	for _, name := range names {
-		fmt.Fprintf(w, `<option value="%s"></option>`, name)
+		fmt.Fprintf(w, `<option value="%s"></option>`, html.EscapeString(name))
 	}
 }

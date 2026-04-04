@@ -55,3 +55,9 @@ templ SettingsSaved() {
 		Settings saved successfully.
 	</div>
 }
+
+templ SettingsError(message string) {
+	<div class="bg-red-50 border border-red-200 rounded-lg p-3 text-red-700 text-sm">
+		{ message }
+	</div>
+}

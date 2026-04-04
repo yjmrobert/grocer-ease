@@ -45,8 +45,10 @@ func setupTestServer(t *testing.T) *httptest.Server {
 	}
 
 	priceService := service.NewPriceService(providers, cacheStore)
-	settings := &handler.AppSettings{PostalCode: "M5V", TripPenalty: 5.0}
-	router := handler.NewRouter(listStore, priceService, cacheStore, settings)
+	settingsStore := store.NewSettingsStore(db)
+	settingsStore.Set("postal_code", "M5V")
+	settingsStore.Set("trip_penalty", "5")
+	router := handler.NewRouter(listStore, priceService, cacheStore, settingsStore)
 
 	return httptest.NewServer(router)
 }

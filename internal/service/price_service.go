@@ -50,7 +50,11 @@ func (s *PriceService) ComparePrices(ctx context.Context, items []model.GroceryI
 		itemNames[i] = item.Name
 	}
 
-	// Query all item×store combinations concurrently
+	// Query all item×store combinations concurrently with a semaphore
+	// to avoid overwhelming external APIs
+	const maxConcurrent = 10
+	sem := make(chan struct{}, maxConcurrent)
+
 	var mu sync.Mutex
 	var wg sync.WaitGroup
 	results := make([]itemStoreResult, 0, len(items)*len(s.providers))
@@ -60,6 +64,8 @@ func (s *PriceService) ComparePrices(ctx context.Context, items []model.GroceryI
 			wg.Add(1)
 			go func(itemName string, p provider.PriceProvider) {
 				defer wg.Done()
+				sem <- struct{}{}        // acquire
+				defer func() { <-sem }() // release
 				result := s.lookupPrice(ctx, itemName, p)
 				mu.Lock()
 				results = append(results, itemStoreResult{

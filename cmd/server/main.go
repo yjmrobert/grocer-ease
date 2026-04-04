@@ -26,16 +26,20 @@ func main() {
 
 	listStore := store.NewListStore(db)
 	cacheStore := store.NewPriceCacheStore(db, 6*time.Hour)
+	settingsStore := store.NewSettingsStore(db)
+
+	// Seed postal code from env if not already in DB
+	if settingsStore.Get("postal_code", "") == "" && postalCode != "" {
+		settingsStore.Set("postal_code", postalCode)
+	}
+	if settingsStore.Get("trip_penalty", "") == "" {
+		settingsStore.Set("trip_penalty", "5")
+	}
 
 	providers := buildProviders(postalCode)
 	priceService := service.NewPriceService(providers, cacheStore)
 
-	settings := &handler.AppSettings{
-		PostalCode:  postalCode,
-		TripPenalty: 5.0,
-	}
-
-	router := handler.NewRouter(listStore, priceService, cacheStore, settings)
+	router := handler.NewRouter(listStore, priceService, cacheStore, settingsStore)
 
 	if len(providers) == 0 {
 		log.Println("WARNING: No price providers configured. Set POSTAL_CODE env var.")

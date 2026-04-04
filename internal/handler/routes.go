@@ -7,7 +7,7 @@ import (
 	"github.com/yjmrobert/grocer-ease/internal/store"
 )
 
-func NewRouter(listStore *store.ListStore, priceService *service.PriceService, cacheStore *store.PriceCacheStore, settings *AppSettings) *chi.Mux {
+func NewRouter(listStore *store.ListStore, priceService *service.PriceService, cacheStore *store.PriceCacheStore, settingsStore *store.SettingsStore) *chi.Mux {
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
@@ -16,7 +16,7 @@ func NewRouter(listStore *store.ListStore, priceService *service.PriceService, c
 	ph := NewPriceHandler(listStore, priceService)
 	oh := NewOptimizeHandler(listStore, priceService)
 	ah := NewAutocompleteHandler(cacheStore)
-	sh := NewSettingsHandler(settings)
+	sh := NewSettingsHandler(settingsStore)
 
 	// Pages
 	r.Get("/", lh.HandleHome)

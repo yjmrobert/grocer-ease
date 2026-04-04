@@ -72,7 +72,7 @@ func ListDetail(list *model.GroceryList, items []model.GroceryItem) templ.Compon
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" hx-target=\"#item-list\" hx-swap=\"beforeend\" hx-on::after-request=\"this.reset()\" class=\"flex flex-wrap gap-2\"><div class=\"flex-1 min-w-[200px]\"><input type=\"text\" name=\"name\" list=\"item-suggestions\" placeholder=\"Item name (e.g. Chicken breast)\" required autocomplete=\"off\" hx-get=\"/api/suggest\" hx-trigger=\"input changed delay:300ms\" hx-target=\"#item-suggestions\" class=\"w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"> <datalist id=\"item-suggestions\"></datalist></div><input type=\"number\" name=\"quantity\" value=\"1\" min=\"0.1\" step=\"0.1\" class=\"w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"> <select name=\"unit\" class=\"px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"><option value=\"each\">each</option> <option value=\"kg\">kg</option> <option value=\"lb\">lb</option> <option value=\"L\">L</option> <option value=\"pack\">pack</option> <option value=\"bag\">bag</option> <option value=\"dozen\">dozen</option></select> <button type=\"submit\" class=\"px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium\">Add</button></form></div><div class=\"bg-white rounded-lg shadow-sm border border-gray-200\"><div class=\"p-4 border-b border-gray-200 flex items-center justify-between\"><h2 class=\"text-lg font-semibold text-gray-700\">Items ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" hx-target=\"#item-list\" hx-swap=\"beforeend\" hx-on::after-request=\"this.reset()\" class=\"flex flex-wrap gap-2\"><div class=\"flex-1 min-w-[200px]\"><label for=\"item-name\" class=\"sr-only\">Item name</label> <input id=\"item-name\" type=\"text\" name=\"name\" list=\"item-suggestions\" placeholder=\"Item name (e.g. Chicken breast)\" required autocomplete=\"off\" hx-get=\"/api/suggest\" hx-trigger=\"input changed delay:300ms\" hx-target=\"#item-suggestions\" class=\"w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"> <datalist id=\"item-suggestions\"></datalist></div><label for=\"item-qty\" class=\"sr-only\">Quantity</label> <input id=\"item-qty\" type=\"number\" name=\"quantity\" value=\"1\" min=\"0.1\" max=\"10000\" step=\"0.1\" aria-label=\"Quantity\" class=\"w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"> <label for=\"item-unit\" class=\"sr-only\">Unit</label> <select id=\"item-unit\" name=\"unit\" aria-label=\"Unit\" class=\"px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500\"><option value=\"each\">each</option> <option value=\"kg\">kg</option> <option value=\"lb\">lb</option> <option value=\"L\">L</option> <option value=\"pack\">pack</option> <option value=\"bag\">bag</option> <option value=\"dozen\">dozen</option></select> <button type=\"submit\" class=\"px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium\">Add</button></form></div><div class=\"bg-white rounded-lg shadow-sm border border-gray-200\"><div class=\"p-4 border-b border-gray-200 flex items-center justify-between\"><h2 class=\"text-lg font-semibold text-gray-700\">Items ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -84,7 +84,7 @@ func ListDetail(list *model.GroceryList, items []model.GroceryItem) templ.Compon
 				var templ_7745c5c3_Var5 string
 				templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%d", len(items)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 71, Col: 86}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 80, Col: 86}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 				if templ_7745c5c3_Err != nil {
@@ -107,7 +107,7 @@ func ListDetail(list *model.GroceryList, items []model.GroceryItem) templ.Compon
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/prices/%s", list.ID))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 76, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 85, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -176,7 +176,7 @@ func ItemRow(item model.GroceryItem) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(item.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 109, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 118, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -189,7 +189,7 @@ func ItemRow(item model.GroceryItem) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.1f", item.Quantity))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 111, Col: 40}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 120, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -202,7 +202,7 @@ func ItemRow(item model.GroceryItem) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(item.Unit)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 111, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 120, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -215,7 +215,7 @@ func ItemRow(item model.GroceryItem) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/item/%s", item.ID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 115, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 124, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {

@@ -4,6 +4,7 @@ import (
 	"context"
 	"math/rand"
 	"strings"
+	"unicode"
 
 	"github.com/yjmrobert/grocer-ease/internal/model"
 )
@@ -28,7 +29,7 @@ func (p *MockProvider) SearchProduct(_ context.Context, query string) (*model.Pr
 	if price, ok := p.prices[q]; ok {
 		return &model.PriceResult{
 			Store:       p.storeName,
-			ProductName: strings.Title(q),
+			ProductName: capitalize(q),
 			Price:       price,
 			Unit:        "each",
 			Confidence:  "exact",
@@ -40,9 +41,22 @@ func (p *MockProvider) SearchProduct(_ context.Context, query string) (*model.Pr
 	}
 	return &model.PriceResult{
 		Store:       p.storeName,
-		ProductName: strings.Title(q),
+		ProductName: capitalize(q),
 		Price:       1.0 + rand.Float64()*10.0,
 		Unit:        "each",
 		Confidence:  "partial",
 	}, nil
+}
+
+// capitalize uppercases the first letter of each word.
+func capitalize(s string) string {
+	prev := ' '
+	return strings.Map(func(r rune) rune {
+		if unicode.IsSpace(rune(prev)) || prev == ' ' {
+			prev = r
+			return unicode.ToUpper(r)
+		}
+		prev = r
+		return r
+	}, s)
 }

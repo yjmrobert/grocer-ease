@@ -81,7 +81,7 @@ func (h *ListHandler) HandleAddItem(w http.ResponseWriter, r *http.Request) {
 
 	quantity := 1.0
 	if q := r.FormValue("quantity"); q != "" {
-		if parsed, err := strconv.ParseFloat(q, 64); err == nil {
+		if parsed, err := strconv.ParseFloat(q, 64); err == nil && parsed > 0 && parsed <= 10000 {
 			quantity = parsed
 		}
 	}
