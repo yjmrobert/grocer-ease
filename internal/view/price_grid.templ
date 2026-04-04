@@ -1,0 +1,61 @@
+package view
+
+import (
+	"fmt"
+)
+
+type PriceGridData struct {
+	Items  []string
+	Stores []string
+	// Prices[itemName][storeName] = price string (e.g. "$4.99" or "Not found")
+	Prices map[string]map[string]string
+	Totals map[string]float64
+}
+
+templ PriceGrid(data PriceGridData) {
+	<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
+		<div class="p-4 border-b border-gray-200">
+			<h2 class="text-lg font-semibold text-gray-700">Price Comparison</h2>
+		</div>
+		<table class="w-full text-sm">
+			<thead>
+				<tr class="bg-gray-50">
+					<th class="text-left px-4 py-3 font-medium text-gray-600">Item</th>
+					for _, store := range data.Stores {
+						<th class="text-right px-4 py-3 font-medium text-gray-600">{ store }</th>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				for _, item := range data.Items {
+					<tr class="border-t border-gray-100">
+						<td class="px-4 py-3 font-medium text-gray-800">{ item }</td>
+						for _, store := range data.Stores {
+							if priceStr, ok := data.Prices[item][store]; ok && priceStr != "Not found" {
+								<td class="text-right px-4 py-3 text-gray-700">{ priceStr }</td>
+							} else {
+								<td class="text-right px-4 py-3 text-gray-300 italic">Not found</td>
+							}
+						}
+					</tr>
+				}
+			</tbody>
+			<tfoot>
+				<tr class="border-t-2 border-gray-300 bg-gray-50 font-semibold">
+					<td class="px-4 py-3 text-gray-800">Estimated Total</td>
+					for _, store := range data.Stores {
+						<td class="text-right px-4 py-3 text-gray-800">
+							{ fmt.Sprintf("$%.2f", data.Totals[store]) }
+						</td>
+					}
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+}
+
+templ PriceGridEmpty() {
+	<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-700">
+		<p>No price providers are configured yet. Price comparison will be available once store scrapers are implemented.</p>
+	</div>
+}

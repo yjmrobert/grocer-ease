@@ -1,0 +1,116 @@
+package view
+
+import (
+	"github.com/yjmrobert/grocer-ease/internal/model"
+	"fmt"
+)
+
+templ ListDetail(list *model.GroceryList, items []model.GroceryItem) {
+	@Layout(list.Name) {
+		<div class="mb-6">
+			<a href="/" class="text-green-600 hover:text-green-700 text-sm">&larr; Back to lists</a>
+			<h1 class="text-2xl font-bold text-gray-800 mt-2">{ list.Name }</h1>
+		</div>
+		<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+			<h2 class="text-lg font-semibold text-gray-700 mb-4">Add Item</h2>
+			<form
+				hx-post={ fmt.Sprintf("/list/%s/items", list.ID) }
+				hx-target="#item-list"
+				hx-swap="beforeend"
+				hx-on::after-request="this.reset()"
+				class="flex flex-wrap gap-2"
+			>
+				<input
+					type="text"
+					name="name"
+					placeholder="Item name (e.g. Chicken breast)"
+					required
+					class="flex-1 min-w-[200px] px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+				/>
+				<input
+					type="number"
+					name="quantity"
+					value="1"
+					min="0.1"
+					step="0.1"
+					class="w-20 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+				/>
+				<select
+					name="unit"
+					class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+				>
+					<option value="each">each</option>
+					<option value="kg">kg</option>
+					<option value="lb">lb</option>
+					<option value="L">L</option>
+					<option value="pack">pack</option>
+					<option value="bag">bag</option>
+					<option value="dozen">dozen</option>
+				</select>
+				<button
+					type="submit"
+					class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+				>
+					Add
+				</button>
+			</form>
+		</div>
+		<div class="bg-white rounded-lg shadow-sm border border-gray-200">
+			<div class="p-4 border-b border-gray-200 flex items-center justify-between">
+				<h2 class="text-lg font-semibold text-gray-700">
+					Items
+					if len(items) > 0 {
+						<span class="text-sm font-normal text-gray-400">({ fmt.Sprintf("%d", len(items)) })</span>
+					}
+				</h2>
+				if len(items) > 0 {
+					<button
+						hx-post={ fmt.Sprintf("/prices/%s", list.ID) }
+						hx-target="#price-results"
+						hx-swap="innerHTML"
+						hx-indicator="#price-loading"
+						class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+					>
+						Compare Prices
+					</button>
+				}
+			</div>
+			<div id="item-list">
+				if len(items) == 0 {
+					<div class="p-8 text-center text-gray-400">
+						<p>No items yet. Add some above!</p>
+					</div>
+				}
+				for _, item := range items {
+					@ItemRow(item)
+				}
+			</div>
+		</div>
+		<div id="price-loading" class="htmx-indicator text-center py-8">
+			<div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+			<p class="text-gray-500 mt-2">Fetching prices...</p>
+		</div>
+		<div id="price-results" class="mt-6"></div>
+	}
+}
+
+templ ItemRow(item model.GroceryItem) {
+	<div class="flex items-center justify-between px-4 py-3 border-b border-gray-100 last:border-0 hover:bg-gray-50">
+		<div class="flex-1">
+			<span class="font-medium text-gray-800">{ item.Name }</span>
+			<span class="text-sm text-gray-400 ml-2">
+				{ fmt.Sprintf("%.1f", item.Quantity) } { item.Unit }
+			</span>
+		</div>
+		<button
+			hx-delete={ fmt.Sprintf("/item/%s", item.ID) }
+			hx-target="closest div"
+			hx-swap="outerHTML"
+			class="text-red-400 hover:text-red-600 p-1"
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+				<path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+			</svg>
+		</button>
+	</div>
+}
