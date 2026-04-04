@@ -14,6 +14,7 @@ func NewRouter(listStore *store.ListStore, priceService *service.PriceService) *
 
 	lh := NewListHandler(listStore)
 	ph := NewPriceHandler(listStore, priceService)
+	oh := NewOptimizeHandler(listStore, priceService)
 
 	// Pages
 	r.Get("/", lh.HandleHome)
@@ -29,6 +30,9 @@ func NewRouter(listStore *store.ListStore, priceService *service.PriceService) *
 
 	// Price comparison (HTMX)
 	r.Post("/prices/{listId}", ph.HandleComparePrices)
+
+	// Trip optimization (HTMX)
+	r.Post("/optimize/{listId}", oh.HandleOptimize)
 
 	return r
 }

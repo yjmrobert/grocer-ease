@@ -1,0 +1,47 @@
+package view
+
+import (
+	"github.com/yjmrobert/grocer-ease/internal/model"
+	"fmt"
+)
+
+templ TripPlan(plan model.TripPlan) {
+	<div class="space-y-4">
+		<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+			<h2 class="text-lg font-semibold text-gray-700 mb-1">Optimized Shopping Plan</h2>
+			<p class="text-sm text-gray-500 mb-3">
+				{ fmt.Sprintf("%d", len(plan.Trips)) } store visit(s) — Total: <span class="font-semibold text-gray-800">{ fmt.Sprintf("$%.2f", plan.TotalCost) }</span>
+				if plan.Savings > 0 {
+					<span class="ml-2 text-green-600 font-semibold">
+						(Save { fmt.Sprintf("$%.2f", plan.Savings) } vs single store)
+					</span>
+				}
+			</p>
+		</div>
+		for i, trip := range plan.Trips {
+			<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+				<div class="bg-blue-50 px-4 py-3 border-b border-blue-100 flex items-center justify-between">
+					<div>
+						<span class="text-xs font-semibold text-blue-400 uppercase tracking-wide">Stop { fmt.Sprintf("%d", i+1) }</span>
+						<h3 class="text-base font-semibold text-gray-800">{ trip.Store }</h3>
+					</div>
+					<span class="text-lg font-bold text-gray-700">{ fmt.Sprintf("$%.2f", trip.Subtotal) }</span>
+				</div>
+				<ul class="divide-y divide-gray-100">
+					for _, item := range trip.Items {
+						<li class="px-4 py-2 flex items-center justify-between text-sm">
+							<span class="text-gray-700">{ item.Name }</span>
+							<span class="text-gray-400">{ fmt.Sprintf("%.1f %s", item.Quantity, item.Unit) }</span>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+	</div>
+}
+
+templ TripPlanEmpty() {
+	<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-yellow-700">
+		<p>Compare prices first, then optimize your trips.</p>
+	</div>
+}

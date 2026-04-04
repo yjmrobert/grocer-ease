@@ -2,6 +2,7 @@ package view
 
 import (
 	"fmt"
+	"math"
 )
 
 type PriceGridData struct {
@@ -12,9 +13,51 @@ type PriceGridData struct {
 	Totals map[string]float64
 }
 
+// cheapestStore returns the store name with the lowest total.
+func (d PriceGridData) cheapestStore() string {
+	best := ""
+	bestTotal := math.MaxFloat64
+	for _, store := range d.Stores {
+		if t, ok := d.Totals[store]; ok && t > 0 && t < bestTotal {
+			bestTotal = t
+			best = store
+		}
+	}
+	return best
+}
+
+// isCheapestForItem returns true if this store has the lowest price for the item.
+func (d PriceGridData) isCheapestForItem(item, store string) bool {
+	priceStr := d.Prices[item][store]
+	if priceStr == "Not found" {
+		return false
+	}
+	price := parsePriceStr(priceStr)
+	if price == 0 {
+		return false
+	}
+	for _, s := range d.Stores {
+		otherStr := d.Prices[item][s]
+		if otherStr == "Not found" {
+			continue
+		}
+		other := parsePriceStr(otherStr)
+		if other > 0 && other < price {
+			return false
+		}
+	}
+	return true
+}
+
+func parsePriceStr(s string) float64 {
+	var p float64
+	fmt.Sscanf(s, "$%f", &p)
+	return p
+}
+
 templ PriceGrid(data PriceGridData) {
 	<div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
-		<div class="p-4 border-b border-gray-200">
+		<div class="p-4 border-b border-gray-200 flex items-center justify-between">
 			<h2 class="text-lg font-semibold text-gray-700">Price Comparison</h2>
 		</div>
 		<table class="w-full text-sm">
@@ -22,7 +65,14 @@ templ PriceGrid(data PriceGridData) {
 				<tr class="bg-gray-50">
 					<th class="text-left px-4 py-3 font-medium text-gray-600">Item</th>
 					for _, store := range data.Stores {
-						<th class="text-right px-4 py-3 font-medium text-gray-600">{ store }</th>
+						if store == data.cheapestStore() {
+							<th class="text-right px-4 py-3 font-medium text-green-700 bg-green-50">
+								{ store }
+								<span class="block text-xs font-normal text-green-500">Cheapest overall</span>
+							</th>
+						} else {
+							<th class="text-right px-4 py-3 font-medium text-gray-600">{ store }</th>
+						}
 					}
 				</tr>
 			</thead>
@@ -32,7 +82,11 @@ templ PriceGrid(data PriceGridData) {
 						<td class="px-4 py-3 font-medium text-gray-800">{ item }</td>
 						for _, store := range data.Stores {
 							if priceStr, ok := data.Prices[item][store]; ok && priceStr != "Not found" {
-								<td class="text-right px-4 py-3 text-gray-700">{ priceStr }</td>
+								if data.isCheapestForItem(item, store) {
+									<td class="text-right px-4 py-3 text-green-700 font-semibold bg-green-50">{ priceStr }</td>
+								} else {
+									<td class="text-right px-4 py-3 text-gray-700">{ priceStr }</td>
+								}
 							} else {
 								<td class="text-right px-4 py-3 text-gray-300 italic">Not found</td>
 							}
@@ -44,9 +98,15 @@ templ PriceGrid(data PriceGridData) {
 				<tr class="border-t-2 border-gray-300 bg-gray-50 font-semibold">
 					<td class="px-4 py-3 text-gray-800">Estimated Total</td>
 					for _, store := range data.Stores {
-						<td class="text-right px-4 py-3 text-gray-800">
-							{ fmt.Sprintf("$%.2f", data.Totals[store]) }
-						</td>
+						if store == data.cheapestStore() {
+							<td class="text-right px-4 py-3 text-green-700 bg-green-50">
+								{ fmt.Sprintf("$%.2f", data.Totals[store]) }
+							</td>
+						} else {
+							<td class="text-right px-4 py-3 text-gray-800">
+								{ fmt.Sprintf("$%.2f", data.Totals[store]) }
+							</td>
+						}
 					}
 				</tr>
 			</tfoot>
