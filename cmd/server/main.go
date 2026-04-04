@@ -30,13 +30,15 @@ func main() {
 	providers := buildProviders(postalCode)
 	priceService := service.NewPriceService(providers, cacheStore)
 
-	router := handler.NewRouter(listStore, priceService)
+	settings := &handler.AppSettings{
+		PostalCode:  postalCode,
+		TripPenalty: 5.0,
+	}
+
+	router := handler.NewRouter(listStore, priceService, cacheStore, settings)
 
 	if len(providers) == 0 {
-		log.Println("WARNING: No price providers configured. Set POSTAL_CODE and optionally LOBLAWS_API_KEY env vars.")
-		log.Println("  Flipp provider: set POSTAL_CODE (e.g., M5V)")
-		log.Println("  Loblaws/Maxi:   set LOBLAWS_API_KEY and LOBLAWS_STORE_ID")
-		log.Println("  Walmart:        set ENABLE_WALMART=true (may be blocked by CloudFlare)")
+		log.Println("WARNING: No price providers configured. Set POSTAL_CODE env var.")
 	} else {
 		log.Printf("Configured %d price provider(s):", len(providers))
 		for _, p := range providers {
@@ -55,7 +57,6 @@ func buildProviders(postalCode string) []provider.PriceProvider {
 	var providers []provider.PriceProvider
 
 	// Flipp providers — always enabled if POSTAL_CODE is set
-	// Each provider targets a specific store in Flipp's flyer data
 	if postalCode != "" {
 		providers = append(providers,
 			provider.NewFlippProvider("Walmart", postalCode),
@@ -63,6 +64,9 @@ func buildProviders(postalCode string) []provider.PriceProvider {
 			provider.NewFlippProvider("Maxi", postalCode),
 			provider.NewFlippProvider("No Frills", postalCode),
 			provider.NewFlippProvider("Metro", postalCode),
+			provider.NewFlippProvider("FreshCo", postalCode),
+			provider.NewFlippProvider("Sobeys", postalCode),
+			provider.NewFlippProvider("Food Basics", postalCode),
 		)
 	}
 
@@ -73,11 +77,11 @@ func buildProviders(postalCode string) []provider.PriceProvider {
 		maxiStoreID := envOrDefault("MAXI_STORE_ID", "")
 
 		providers = append(providers,
-			provider.NewLoblawsProvider(provider.BannerLoblaws, "Loblaws", loblawsStoreID, loblawsKey),
+			provider.NewLoblawsProvider(provider.BannerLoblaws, "Loblaws (Direct)", loblawsStoreID, loblawsKey),
 		)
 		if maxiStoreID != "" {
 			providers = append(providers,
-				provider.NewLoblawsProvider(provider.BannerMaxi, "Maxi", maxiStoreID, loblawsKey),
+				provider.NewLoblawsProvider(provider.BannerMaxi, "Maxi (Direct)", maxiStoreID, loblawsKey),
 			)
 		}
 	}
