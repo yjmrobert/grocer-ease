@@ -38,37 +38,37 @@ type pcSearchRequest struct {
 }
 
 type pcPagination struct {
-	From       int `json:"from"`
-	Size       int `json:"size"`
+	From int `json:"from"`
+	Size int `json:"size"`
 }
 
 // pcSearchResponse is the search result from PC Express.
 type pcSearchResponse struct {
-	Results       []pcProductResult `json:"results"`
-	Pagination    interface{}       `json:"pagination"`
-	TotalResults  int               `json:"totalResults"`
+	Results      []pcProductResult `json:"results"`
+	Pagination   interface{}       `json:"pagination"`
+	TotalResults int               `json:"totalResults"`
 }
 
 type pcProductResult struct {
-	ProductID   string        `json:"productId"`
-	Name        string        `json:"name"`
-	Brand       string        `json:"brand"`
-	Description string        `json:"description"`
-	ImageURL    string        `json:"imageUrl"`
-	Prices      pcPriceInfo   `json:"prices"`
-	PackageSize string        `json:"packageSize"`
+	ProductID   string      `json:"productId"`
+	Name        string      `json:"name"`
+	Brand       string      `json:"brand"`
+	Description string      `json:"description"`
+	ImageURL    string      `json:"imageUrl"`
+	Prices      pcPriceInfo `json:"prices"`
+	PackageSize string      `json:"packageSize"`
 }
 
 type pcPriceInfo struct {
-	Price          pcPriceDetail `json:"price"`
+	Price           pcPriceDetail  `json:"price"`
 	ComparisonPrice *pcPriceDetail `json:"comparisonPrice"`
-	WasPrice       *pcPriceDetail `json:"wasPrice"`
+	WasPrice        *pcPriceDetail `json:"wasPrice"`
 }
 
 type pcPriceDetail struct {
-	Value       float64 `json:"value"`
-	Quantity    int     `json:"quantity"`
-	Unit        string  `json:"unit"`
+	Value    float64 `json:"value"`
+	Quantity int     `json:"quantity"`
+	Unit     string  `json:"unit"`
 }
 
 // LoblawsProvider searches products via the PC Express internal API.

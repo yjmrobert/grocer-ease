@@ -25,28 +25,28 @@ type flippSearchResponse struct {
 }
 
 type flippSearchItem struct {
-	FlyerItemID int    `json:"flyer_item_id"`
-	MerchantID  int    `json:"merchant_id"`
-	Merchant    string `json:"merchant"`
-	Name        string `json:"name"`
-	Price       string `json:"price"`
-	PrePriceText string `json:"pre_price_text"`
+	FlyerItemID   int    `json:"flyer_item_id"`
+	MerchantID    int    `json:"merchant_id"`
+	Merchant      string `json:"merchant"`
+	Name          string `json:"name"`
+	Price         string `json:"price"`
+	PrePriceText  string `json:"pre_price_text"`
 	PostPriceText string `json:"post_price_text"`
 }
 
 // flippItemDetail represents a single item detail from Flipp.
 type flippItemDetail struct {
-	ID            int     `json:"id"`
-	Name          string  `json:"name"`
-	Description   string  `json:"description"`
-	Price         float64 `json:"current_price"`
-	PrePriceText  string  `json:"pre_price_text"`
-	PostPriceText string  `json:"post_price_text"`
-	CutoutImageURL string `json:"cutout_image_url"`
-	Merchant      string  `json:"merchant"`
-	ValidFrom     string  `json:"valid_from"`
-	ValidTo       string  `json:"valid_to"`
-	FlyerID       int     `json:"flyer_id"`
+	ID             int     `json:"id"`
+	Name           string  `json:"name"`
+	Description    string  `json:"description"`
+	Price          float64 `json:"current_price"`
+	PrePriceText   string  `json:"pre_price_text"`
+	PostPriceText  string  `json:"post_price_text"`
+	CutoutImageURL string  `json:"cutout_image_url"`
+	Merchant       string  `json:"merchant"`
+	ValidFrom      string  `json:"valid_from"`
+	ValidTo        string  `json:"valid_to"`
+	FlyerID        int     `json:"flyer_id"`
 }
 
 // FlippProvider fetches grocery deal prices from Flipp flyer data.

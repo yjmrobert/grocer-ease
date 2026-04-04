@@ -275,4 +275,3 @@ func (p *testFlippProvider) SearchProduct(ctx context.Context, query string) (*m
 func (p *testFlippProvider) Store() string {
 	return p.FlippProvider.Store()
 }
-

@@ -62,7 +62,7 @@ func TestLoblawsProvider_SearchProduct(t *testing.T) {
 						ImageURL:    "/images/large/20843076001.jpg",
 						PackageSize: "per lb",
 						Prices: pcPriceInfo{
-							Price: pcPriceDetail{Value: 0.69, Quantity: 1, Unit: "lb"},
+							Price:           pcPriceDetail{Value: 0.69, Quantity: 1, Unit: "lb"},
 							ComparisonPrice: &pcPriceDetail{Value: 1.52, Quantity: 1, Unit: "kg"},
 						},
 					},

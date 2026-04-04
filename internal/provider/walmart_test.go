@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"net/url"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 
