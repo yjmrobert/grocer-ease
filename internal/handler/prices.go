@@ -6,20 +6,20 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/go-chi/chi/v5"
-	"github.com/yjmrobert/grocer-ease/internal/provider"
+	"github.com/yjmrobert/grocer-ease/internal/service"
 	"github.com/yjmrobert/grocer-ease/internal/store"
 	"github.com/yjmrobert/grocer-ease/internal/view"
 )
 
 type PriceHandler struct {
-	listStore *store.ListStore
-	providers []provider.PriceProvider
+	listStore    *store.ListStore
+	priceService *service.PriceService
 }
 
-func NewPriceHandler(ls *store.ListStore, providers []provider.PriceProvider) *PriceHandler {
+func NewPriceHandler(ls *store.ListStore, ps *service.PriceService) *PriceHandler {
 	return &PriceHandler{
-		listStore: ls,
-		providers: providers,
+		listStore:    ls,
+		priceService: ps,
 	}
 }
 
@@ -33,13 +33,16 @@ func (h *PriceHandler) HandleComparePrices(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	if len(h.providers) == 0 {
+	if len(items) == 0 {
 		templ.Handler(view.PriceGridEmpty()).ServeHTTP(w, r)
 		return
 	}
 
-	// TODO: Phase 2 — query providers for prices
-	// For now, show the empty message
-	templ.Handler(view.PriceGridEmpty()).ServeHTTP(w, r)
-	_ = items // will be used when providers are implemented
+	if !h.priceService.HasProviders() {
+		templ.Handler(view.PriceGridEmpty()).ServeHTTP(w, r)
+		return
+	}
+
+	gridData := h.priceService.ComparePrices(r.Context(), items)
+	templ.Handler(view.PriceGrid(gridData)).ServeHTTP(w, r)
 }
