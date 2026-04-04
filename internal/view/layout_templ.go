@@ -42,7 +42,7 @@ func Layout(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " - Grocer-Ease</title><script src=\"https://unpkg.com/htmx.org@2.0.4\"></script><script src=\"https://cdn.tailwindcss.com\"></script></head><body class=\"bg-gray-50 min-h-screen\"><nav class=\"bg-green-700 text-white shadow-md\"><div class=\"max-w-4xl mx-auto px-4 py-3 flex items-center justify-between\"><a href=\"/\" class=\"text-xl font-bold tracking-tight\">Grocer-Ease</a> <span class=\"text-green-200 text-sm\">Grocery Price Comparison</span></div></nav><main class=\"max-w-4xl mx-auto px-4 py-8\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, " - Grocer-Ease</title><script src=\"https://unpkg.com/htmx.org@2.0.4\"></script><script src=\"https://cdn.tailwindcss.com\"></script><style>\n\t\t\t\t.htmx-indicator { display: none; }\n\t\t\t\t.htmx-request .htmx-indicator, .htmx-request.htmx-indicator { display: block; }\n\t\t\t</style></head><body class=\"bg-gray-50 min-h-screen\"><nav class=\"bg-green-700 text-white shadow-md\"><div class=\"max-w-4xl mx-auto px-4 py-3 flex items-center justify-between\"><a href=\"/\" class=\"text-xl font-bold tracking-tight\">Grocer-Ease</a><div class=\"flex items-center gap-4\"><span class=\"text-green-200 text-sm hidden sm:inline\">Grocery Price Comparison</span> <a href=\"/settings\" class=\"text-green-200 hover:text-white text-sm\">Settings</a></div></div></nav><main class=\"max-w-4xl mx-auto px-4 py-6 sm:py-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

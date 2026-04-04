@@ -35,6 +35,34 @@ func (s *PriceCacheStore) Get(query, store string) (*model.PriceCache, error) {
 	return entry, nil
 }
 
+// GetProductNames returns distinct cached product names matching a prefix, for autocomplete.
+func (s *PriceCacheStore) GetProductNames(prefix string, limit int) ([]string, error) {
+	if limit <= 0 {
+		limit = 20
+	}
+	rows, err := s.db.Query(
+		`SELECT DISTINCT product_name FROM price_cache
+		 WHERE product_name LIKE ? COLLATE NOCASE
+		 ORDER BY product_name
+		 LIMIT ?`,
+		prefix+"%", limit,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("get product names: %w", err)
+	}
+	defer rows.Close()
+
+	var names []string
+	for rows.Next() {
+		var name string
+		if err := rows.Scan(&name); err != nil {
+			return nil, err
+		}
+		names = append(names, name)
+	}
+	return names, rows.Err()
+}
+
 func (s *PriceCacheStore) Set(query, storeName, productName string, price float64, unit string) error {
 	// Delete any existing entry for this query+store
 	s.db.Exec("DELETE FROM price_cache WHERE item_query = ? AND store = ?", query, storeName)
