@@ -1,0 +1,68 @@
+package view
+
+import (
+	"github.com/yjmrobert/grocer-ease/internal/model"
+	"fmt"
+)
+
+templ Home(lists []model.GroceryList) {
+	@Layout("Home") {
+		<div class="mb-8">
+			<h1 class="text-2xl font-bold text-gray-800 mb-4">My Grocery Lists</h1>
+			<form
+				hx-post="/list"
+				hx-target="#lists"
+				hx-swap="afterbegin"
+				class="flex gap-2 mb-6"
+			>
+				<input
+					type="text"
+					name="name"
+					placeholder="New list name..."
+					required
+					class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+				/>
+				<button
+					type="submit"
+					class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+				>
+					Create List
+				</button>
+			</form>
+		</div>
+		<div id="lists" class="space-y-3">
+			if len(lists) == 0 {
+				@EmptyState()
+			}
+			for _, list := range lists {
+				@ListCard(list)
+			}
+		</div>
+	}
+}
+
+templ EmptyState() {
+	<div id="empty-state" class="text-center py-12 text-gray-400">
+		<p class="text-lg">No grocery lists yet. Create one above!</p>
+	</div>
+}
+
+templ ListCard(list model.GroceryList) {
+	<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 flex items-center justify-between hover:shadow-md transition-shadow">
+		<a href={ templ.SafeURL(fmt.Sprintf("/list/%s", list.ID)) } class="flex-1">
+			<h2 class="text-lg font-medium text-gray-800">{ list.Name }</h2>
+			<p class="text-sm text-gray-400">{ list.UpdatedAt.Format("Jan 2, 2006 3:04 PM") }</p>
+		</a>
+		<button
+			hx-delete={ fmt.Sprintf("/list/%s", list.ID) }
+			hx-target="closest div"
+			hx-swap="outerHTML"
+			hx-confirm="Delete this list?"
+			class="text-red-400 hover:text-red-600 ml-4 p-2"
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+				<path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+			</svg>
+		</button>
+	</div>
+}
