@@ -44,5 +44,5 @@ func (h *PriceHandler) HandleComparePrices(w http.ResponseWriter, r *http.Reques
 	}
 
 	gridData := h.priceService.ComparePrices(r.Context(), items)
-	templ.Handler(view.PriceGrid(gridData)).ServeHTTP(w, r)
+	templ.Handler(view.PriceResults(gridData, listID)).ServeHTTP(w, r)
 }

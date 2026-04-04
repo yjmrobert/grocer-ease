@@ -134,7 +134,7 @@ func ListDetail(list *model.GroceryList, items []model.GroceryItem) templ.Compon
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div></div><div id=\"price-loading\" class=\"htmx-indicator text-center py-8\"><div class=\"inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600\"></div><p class=\"text-gray-500 mt-2\">Fetching prices...</p></div><div id=\"price-results\" class=\"mt-6\"></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 11, "</div></div><div id=\"price-loading\" class=\"htmx-indicator text-center py-8\"><div class=\"inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-green-600\"></div><p class=\"text-gray-500 mt-2\">Fetching prices...</p></div><div id=\"price-results\" class=\"mt-6\"></div><div id=\"optimize-section\" class=\"mt-4\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -176,7 +176,7 @@ func ItemRow(item model.GroceryItem) templ.Component {
 		var templ_7745c5c3_Var8 string
 		templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(item.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 100, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 101, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 		if templ_7745c5c3_Err != nil {
@@ -189,7 +189,7 @@ func ItemRow(item model.GroceryItem) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%.1f", item.Quantity))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 102, Col: 40}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 103, Col: 40}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -202,7 +202,7 @@ func ItemRow(item model.GroceryItem) templ.Component {
 		var templ_7745c5c3_Var10 string
 		templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(item.Unit)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 102, Col: 54}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 103, Col: 54}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 		if templ_7745c5c3_Err != nil {
@@ -215,7 +215,7 @@ func ItemRow(item model.GroceryItem) templ.Component {
 		var templ_7745c5c3_Var11 string
 		templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("/item/%s", item.ID))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 106, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/list.templ`, Line: 107, Col: 47}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {

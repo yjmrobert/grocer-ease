@@ -1,0 +1,40 @@
+package view
+
+import "fmt"
+
+// PriceResults wraps the price grid with an "Optimize Trips" button.
+templ PriceResults(data PriceGridData, listID string) {
+	@PriceGrid(data)
+	if len(data.Stores) > 1 {
+		<div class="mt-4 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+			<div class="flex flex-wrap items-center gap-3">
+				<button
+					hx-post={ fmt.Sprintf("/optimize/%s", listID) }
+					hx-target="#optimize-section"
+					hx-swap="innerHTML"
+					hx-include="[name='trip_penalty']"
+					hx-indicator="#optimize-loading"
+					class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+				>
+					Optimize My Trips
+				</button>
+				<label class="flex items-center gap-2 text-sm text-gray-600">
+					Trip penalty: $
+					<input
+						type="number"
+						name="trip_penalty"
+						value="5"
+						min="0"
+						step="1"
+						class="w-16 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-green-500"
+					/>
+					<span class="text-gray-400">(extra cost per store visit)</span>
+				</label>
+			</div>
+			<div id="optimize-loading" class="htmx-indicator text-center py-4">
+				<div class="inline-block animate-spin rounded-full h-6 w-6 border-b-2 border-green-600"></div>
+				<p class="text-gray-500 mt-1 text-sm">Optimizing...</p>
+			</div>
+		</div>
+	}
+}
