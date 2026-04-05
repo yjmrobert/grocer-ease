@@ -1,16 +1,19 @@
-.PHONY: run build generate clean
+.PHONY: run build generate clean dev
 
-# Generate templ files and build
-build: generate
+# Build the server
+build:
 	go build -o bin/grocer-ease ./cmd/server
 
-# Generate templ templates
+# Generate templ templates (requires templ CLI: go install github.com/a-h/templ/cmd/templ@latest)
 generate:
 	templ generate
 
-# Generate and run
-run: generate
+# Run the server
+run:
 	go run ./cmd/server
+
+# Generate and run (for development)
+dev: generate run
 
 # Clean build artifacts
 clean:
