@@ -30,7 +30,7 @@ func (h *OptimizeHandler) HandleOptimize(w http.ResponseWriter, r *http.Request)
 	items, err := h.listStore.GetItems(listID)
 	if err != nil {
 		log.Printf("error getting items: %v", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		renderError(w, r, "Failed to load items", http.StatusInternalServerError)
 		return
 	}
 

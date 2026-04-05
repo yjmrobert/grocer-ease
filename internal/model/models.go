@@ -1,6 +1,21 @@
 package model
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
+
+// ParsePriceString extracts a float from a price string like "$4.99" or "4.99".
+func ParsePriceString(s string) float64 {
+	var price float64
+	if n, _ := fmt.Sscanf(s, "$%f", &price); n == 1 {
+		return price
+	}
+	if n, _ := fmt.Sscanf(s, "%f", &price); n == 1 {
+		return price
+	}
+	return 0
+}
 
 type GroceryList struct {
 	ID        string

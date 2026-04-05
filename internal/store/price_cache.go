@@ -3,11 +3,20 @@ package store
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/yjmrobert/grocer-ease/internal/model"
 )
+
+// escapeLike escapes SQL LIKE wildcard characters so user input is treated literally.
+func escapeLike(s string) string {
+	s = strings.ReplaceAll(s, `\`, `\\`)
+	s = strings.ReplaceAll(s, `%`, `\%`)
+	s = strings.ReplaceAll(s, `_`, `\_`)
+	return s
+}
 
 type PriceCacheStore struct {
 	db  *sql.DB
@@ -16,7 +25,7 @@ type PriceCacheStore struct {
 
 func NewPriceCacheStore(db *sql.DB, ttl time.Duration) *PriceCacheStore {
 	s := &PriceCacheStore{db: db, ttl: ttl}
-	s.CleanExpired()
+	go s.CleanExpired()
 	return s
 }
 
@@ -49,10 +58,10 @@ func (s *PriceCacheStore) GetProductNames(prefix string, limit int) ([]string, e
 	}
 	rows, err := s.db.Query(
 		`SELECT DISTINCT product_name FROM price_cache
-		 WHERE product_name LIKE ? COLLATE NOCASE
+		 WHERE product_name LIKE ? ESCAPE '\' COLLATE NOCASE
 		 ORDER BY product_name
 		 LIMIT ?`,
-		prefix+"%", limit,
+		escapeLike(prefix)+"%", limit,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("get product names: %w", err)

@@ -1,10 +1,13 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/yjmrobert/grocer-ease/internal/handler"
@@ -29,11 +32,11 @@ func main() {
 	settingsStore := store.NewSettingsStore(db)
 
 	// Seed postal code from env if not already in DB
-	if settingsStore.Get("postal_code", "") == "" && postalCode != "" {
-		settingsStore.Set("postal_code", postalCode)
+	if settingsStore.Get(store.SettingPostalCode, "") == "" && postalCode != "" {
+		settingsStore.Set(store.SettingPostalCode, postalCode)
 	}
-	if settingsStore.Get("trip_penalty", "") == "" {
-		settingsStore.Set("trip_penalty", "5")
+	if settingsStore.Get(store.SettingTripPenalty, "") == "" {
+		settingsStore.Set(store.SettingTripPenalty, "5")
 	}
 
 	providers := buildProviders(postalCode)
@@ -51,10 +54,26 @@ func main() {
 	}
 
 	addr := fmt.Sprintf(":%s", port)
+	srv := &http.Server{Addr: addr, Handler: router}
+
+	// Graceful shutdown on SIGINT/SIGTERM
+	go func() {
+		sigCh := make(chan os.Signal, 1)
+		signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+		sig := <-sigCh
+		log.Printf("Received %v, shutting down gracefully...", sig)
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if err := srv.Shutdown(ctx); err != nil {
+			log.Printf("Shutdown error: %v", err)
+		}
+	}()
+
 	log.Printf("Grocer-Ease starting on http://localhost%s", addr)
-	if err := http.ListenAndServe(addr, router); err != nil {
+	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 		log.Fatalf("server error: %v", err)
 	}
+	log.Println("Server stopped")
 }
 
 func buildProviders(postalCode string) []provider.PriceProvider {

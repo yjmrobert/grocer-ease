@@ -11,6 +11,8 @@ import templruntime "github.com/a-h/templ/runtime"
 import (
 	"fmt"
 	"math"
+
+	"github.com/yjmrobert/grocer-ease/internal/model"
 )
 
 type PriceGridData struct {
@@ -40,7 +42,7 @@ func (d PriceGridData) isCheapestForItem(item, store string) bool {
 	if priceStr == "Not found" {
 		return false
 	}
-	price := parsePriceStr(priceStr)
+	price := model.ParsePriceString(priceStr)
 	if price == 0 {
 		return false
 	}
@@ -49,18 +51,12 @@ func (d PriceGridData) isCheapestForItem(item, store string) bool {
 		if otherStr == "Not found" {
 			continue
 		}
-		other := parsePriceStr(otherStr)
+		other := model.ParsePriceString(otherStr)
 		if other > 0 && other < price {
 			return false
 		}
 	}
 	return true
-}
-
-func parsePriceStr(s string) float64 {
-	var p float64
-	fmt.Sscanf(s, "$%f", &p)
-	return p
 }
 
 func PriceGrid(data PriceGridData) templ.Component {
@@ -97,7 +93,7 @@ func PriceGrid(data PriceGridData) templ.Component {
 				var templ_7745c5c3_Var2 string
 				templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(store)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 70, Col: 15}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 66, Col: 15}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 				if templ_7745c5c3_Err != nil {
@@ -115,7 +111,7 @@ func PriceGrid(data PriceGridData) templ.Component {
 				var templ_7745c5c3_Var3 string
 				templ_7745c5c3_Var3, templ_7745c5c3_Err = templ.JoinStringErrs(store)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 74, Col: 73}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 70, Col: 73}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 				if templ_7745c5c3_Err != nil {
@@ -139,7 +135,7 @@ func PriceGrid(data PriceGridData) templ.Component {
 			var templ_7745c5c3_Var4 string
 			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(item)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 82, Col: 60}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 78, Col: 60}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 			if templ_7745c5c3_Err != nil {
@@ -159,7 +155,7 @@ func PriceGrid(data PriceGridData) templ.Component {
 						var templ_7745c5c3_Var5 string
 						templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(priceStr)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 86, Col: 93}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 82, Col: 93}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 						if templ_7745c5c3_Err != nil {
@@ -177,7 +173,7 @@ func PriceGrid(data PriceGridData) templ.Component {
 						var templ_7745c5c3_Var6 string
 						templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(priceStr)
 						if templ_7745c5c3_Err != nil {
-							return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 88, Col: 66}
+							return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 84, Col: 66}
 						}
 						_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 						if templ_7745c5c3_Err != nil {
@@ -213,7 +209,7 @@ func PriceGrid(data PriceGridData) templ.Component {
 				var templ_7745c5c3_Var7 string
 				templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("$%.2f", data.Totals[store]))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 103, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 99, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 				if templ_7745c5c3_Err != nil {
@@ -231,7 +227,7 @@ func PriceGrid(data PriceGridData) templ.Component {
 				var templ_7745c5c3_Var8 string
 				templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("$%.2f", data.Totals[store]))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 107, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/view/price_grid.templ`, Line: 103, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 				if templ_7745c5c3_Err != nil {
