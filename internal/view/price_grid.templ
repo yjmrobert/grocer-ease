@@ -3,6 +3,8 @@ package view
 import (
 	"fmt"
 	"math"
+
+	"github.com/yjmrobert/grocer-ease/internal/model"
 )
 
 type PriceGridData struct {
@@ -32,7 +34,7 @@ func (d PriceGridData) isCheapestForItem(item, store string) bool {
 	if priceStr == "Not found" {
 		return false
 	}
-	price := parsePriceStr(priceStr)
+	price := model.ParsePriceString(priceStr)
 	if price == 0 {
 		return false
 	}
@@ -41,18 +43,12 @@ func (d PriceGridData) isCheapestForItem(item, store string) bool {
 		if otherStr == "Not found" {
 			continue
 		}
-		other := parsePriceStr(otherStr)
+		other := model.ParsePriceString(otherStr)
 		if other > 0 && other < price {
 			return false
 		}
 	}
 	return true
-}
-
-func parsePriceStr(s string) float64 {
-	var p float64
-	fmt.Sscanf(s, "$%f", &p)
-	return p
 }
 
 templ PriceGrid(data PriceGridData) {

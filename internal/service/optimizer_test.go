@@ -121,9 +121,9 @@ func TestParseGridPrice(t *testing.T) {
 		{"", 0},
 	}
 	for _, tt := range tests {
-		got := parseGridPrice(tt.input)
+		got := model.ParsePriceString(tt.input)
 		if math.Abs(got-tt.expected) > 0.01 {
-			t.Errorf("parseGridPrice(%q) = %f, want %f", tt.input, got, tt.expected)
+			t.Errorf("ParsePriceString(%q) = %f, want %f", tt.input, got, tt.expected)
 		}
 	}
 }

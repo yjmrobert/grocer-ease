@@ -5,6 +5,11 @@ import (
 	"fmt"
 )
 
+const (
+	SettingPostalCode = "postal_code"
+	SettingTripPenalty = "trip_penalty"
+)
+
 type SettingsStore struct {
 	db *sql.DB
 }

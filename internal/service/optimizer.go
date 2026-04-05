@@ -1,7 +1,6 @@
 package service
 
 import (
-	"fmt"
 	"math"
 	"sort"
 
@@ -27,7 +26,7 @@ func OptimizeTripPlan(grid view.PriceGridData, items []model.GroceryItem, tripPe
 		for _, storeName := range grid.Stores {
 			priceStr := grid.Prices[itemName][storeName]
 			if priceStr != "Not found" {
-				priceMatrix[itemName][storeName] = parseGridPrice(priceStr)
+				priceMatrix[itemName][storeName] = model.ParsePriceString(priceStr)
 			}
 		}
 	}
@@ -192,16 +191,3 @@ func nextCheapestStore(storePrices map[string]float64, excludeStore string) stri
 	return bestStore
 }
 
-// parseGridPrice extracts a float from a price string like "$4.99".
-func parseGridPrice(s string) float64 {
-	var price float64
-	// Try parsing with dollar sign
-	if n, _ := fmt.Sscanf(s, "$%f", &price); n == 1 {
-		return price
-	}
-	// Try plain number
-	if n, _ := fmt.Sscanf(s, "%f", &price); n == 1 {
-		return price
-	}
-	return 0
-}

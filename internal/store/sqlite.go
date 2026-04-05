@@ -15,6 +15,10 @@ func NewDB(path string) (*sql.DB, error) {
 	if err := db.Ping(); err != nil {
 		return nil, fmt.Errorf("ping db: %w", err)
 	}
+	// SQLite supports only one writer; limit connections to prevent "database is locked" errors.
+	db.SetMaxOpenConns(1)
+	db.SetMaxIdleConns(1)
+	db.SetConnMaxLifetime(0)
 	if err := migrate(db); err != nil {
 		return nil, fmt.Errorf("migrate db: %w", err)
 	}

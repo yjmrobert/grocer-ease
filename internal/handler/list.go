@@ -35,6 +35,10 @@ func (h *ListHandler) HandleCreateList(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Name is required", http.StatusBadRequest)
 		return
 	}
+	if len(name) > 200 {
+		http.Error(w, "Name too long (max 200 characters)", http.StatusBadRequest)
+		return
+	}
 	list, err := h.store.CreateList(name)
 	if err != nil {
 		log.Printf("error creating list: %v", err)
@@ -78,6 +82,10 @@ func (h *ListHandler) HandleAddItem(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Name is required", http.StatusBadRequest)
 		return
 	}
+	if len(name) > 200 {
+		http.Error(w, "Name too long (max 200 characters)", http.StatusBadRequest)
+		return
+	}
 
 	quantity := 1.0
 	if q := r.FormValue("quantity"); q != "" {
@@ -89,11 +97,16 @@ func (h *ListHandler) HandleAddItem(w http.ResponseWriter, r *http.Request) {
 	if unit == "" {
 		unit = "each"
 	}
+	validUnits := map[string]bool{"each": true, "kg": true, "lb": true, "L": true, "pack": true, "bag": true, "dozen": true}
+	if !validUnits[unit] {
+		http.Error(w, "Invalid unit", http.StatusBadRequest)
+		return
+	}
 
 	item, err := h.store.AddItem(listID, name, quantity, unit)
 	if err != nil {
 		log.Printf("error adding item: %v", err)
-		http.Error(w, "Internal server error", http.StatusInternalServerError)
+		renderError(w, r, "Failed to add item", http.StatusInternalServerError)
 		return
 	}
 	templ.Handler(view.ItemRow(*item)).ServeHTTP(w, r)
